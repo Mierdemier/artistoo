@@ -54,6 +54,21 @@ let config = {
                 [20, 0, 20], 
                 [20, 20, 20] 
             ],
+		/* This will make the obstacles 'anti-sticky', as if they have a repulsive force.
+		J : [ 
+            [0, 20, 20], 
+            [20, 0, 100], 
+            [20, 100, 20] 
+        ],
+		*/
+		/*
+		// This will make the obstacles 'sticky', just like cells to othe cells.
+		J : [ 
+			[0, 20, 20], 
+			[20, 5, 0], 
+			[20, 0, 20] 
+		],
+		*/
 		
 		// VolumeConstraint parameters
 		LAMBDA_V : [0, 50, 500],				// VolumeConstraint importance per cellkind
