@@ -28,7 +28,7 @@ td {
 */
 //Kept in a central place so we only have to change it in one place.
 let nrCells = 20;
-let nrObstacles = 16;
+let nrObstacles = 16; 
 let config = {
 
 	// Grid settings
@@ -156,12 +156,13 @@ function initializeGrid() {
     let spacePerRow = this.C.extents[1] / (numRows + 1);
 
     //Seed the obstacles
-    for (let row = 0; row < numRows; row++)
-    for (let col = 0; col < (row < square ? obstaclesPerRow : extraObstacles); col++) {
-        let x = Math.floor( (col + 1) * spacePerObstacle );
-        let y = Math.floor( (row + 1) * spacePerRow );
-        this.gm.seedCellAt(2, [x, y]);
-    }
+    for (let row = 0; row < numRows; row++){
+		for (let col = 0; col < (row < square ? obstaclesPerRow : extraObstacles); col++) {
+			let x = Math.floor( (col + 1) * spacePerObstacle );
+			let y = Math.floor( (row + 1) * spacePerRow );
+			this.gm.seedCellAt(2, [x, y]);
+		}
+	}
 
 
     //Seed the cells
@@ -212,6 +213,24 @@ function killAllCells(){
 	}
 }
 
+function addObstacle(){
+	let square = Math.floor(Math.sqrt(nrObstacles));
+    let obstaclesPerRow = Math.floor(nrObstacles / square);
+    let extraObstacles = nrObstacles % square;
+    let numRows = square + (extraObstacles > 0 ? 1 : 0);
+
+    let spacePerObstacle = sim.C.extents[0] / (obstaclesPerRow + 1);
+    let spacePerRow = sim.C.extents[1] / (numRows + 1);
+
+	for (let row = 0; row < numRows; row++){
+		for (let col = 0; col < (row < square ? obstaclesPerRow : extraObstacles); col++) {
+			let x = Math.floor( (col + 1) * spacePerObstacle );
+			let y = Math.floor( (row + 1) * spacePerRow );
+			sim.gm.seedCellAt(2, [x, y]);
+		}
+	}
+}
+
 </script>
 </head>
 <body onload="initialize()">
@@ -225,6 +244,7 @@ function killAllCells(){
 <button onclick="seedCells(100)">+100 cells</button>
 <button onclick="killCell()">remove cell</button>
 <button onclick="killAllCells()">remove all cells</button>
+<button onclick="addObstacle()">add obstacles</button>
 <br>
 <div class="slidecontainer">
 <form autocomplete="off">
