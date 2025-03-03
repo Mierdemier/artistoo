@@ -27,8 +27,8 @@ td {
 	----------------------------------
 */
 //Kept in a central place so we only have to change it in one place.
-let nrCells = 20;
-let nrObstacles = 16; 
+let nrCells = 130;
+let nrObstacles = 36; 
 let config = {
 
 	// Grid settings
@@ -72,15 +72,15 @@ let config = {
 		
 		// VolumeConstraint parameters
 		LAMBDA_V : [0, 50, 500],				// VolumeConstraint importance per cellkind
-		V : [0, 500, 400],					// Target volume of each cellkind
+		V : [0, 500, 250],					// Target volume of each cellkind
 		
 		// PerimeterConstraint parameters
-		LAMBDA_P : [0,2, 500],				// PerimeterConstraint importance per cellkind
-		P : [0,340, 80],					// Target perimeter of each cellkind
+		LAMBDA_P : [0, 2, 500],				// PerimeterConstraint importance per cellkind
+		P : [0, 340, 80],					// Target perimeter of each cellkind
 		
 		// ActivityConstraint parameters
-		LAMBDA_ACT : [0,140, 0],			// ActivityConstraint importance per cellkind
-		MAX_ACT : [0,80, 0],				// Activity memory duration per cellkind
+		LAMBDA_ACT : [0, 140, 0],			// ActivityConstraint importance per cellkind
+		MAX_ACT : [0, 80, 0],				// Activity memory duration per cellkind
 		ACT_MEAN : "geometric"				// Is neighborhood activity computed as a
 		// "geometric" or "arithmetic" mean?
 	},
@@ -122,6 +122,7 @@ let sim, meter
 
 
 function initialize(){
+	document.getElementById("timeValue").textContent = "0"
 
     let custommethods = {
         initializeGrid : initializeGrid
@@ -136,6 +137,8 @@ function initialize(){
 function step(){
 	sim.step()
 	meter.tick()
+	document.getElementById("timeValue").textContent = sim.time
+
 	if( sim.conf["RUNTIME_BROWSER"] == "Inf" | sim.time+1 < sim.conf["RUNTIME_BROWSER"] ){
 		requestAnimationFrame( step )
 	}
@@ -247,51 +250,54 @@ function addObstacle(){
 <button onclick="addObstacle()">add obstacles</button>
 <br>
 <div class="slidecontainer">
-<form autocomplete="off">
-<table>
-<tr>
-	<td>Adhesion<sub>cell-matrix</sub></td><td>
-	<input type="text" value="20" id="jte" oninput="sim.C.conf.J[1][0]=sim.C.conf.J[0][1]=parseInt(this.value)">
-	</td>
-	<td>Adhesion<sub>cell-cell</sub></td><td>
-	<input type="text" value="0" id="jtt" oninput="sim.C.conf.J[1][1]=parseInt(this.value)">
-	</td>
-</tr>
-<tr>
-	<td>Volume</td><td>
-		<input type="text" value="500" id="volume" oninput="if(this.value>0){sim.C.conf.V[1]=this.value}">
-	</td>
-	<td>&lambda;<sub>Volume</sub></td><td>
-		<input type="text" value="50" id="lvolume" oninput="sim.C.conf.LAMBDA_V[1]=this.value">
-	</td>
-</tr>
-<tr>
-	<td>Perimeter</td><td>
-		<input type="text" value="340" id="perimeter" oninput="sim.C.conf.P[1]=this.value">
-	</td>
-	<td>&lambda;<sub>P</sub></td><td>
-		<input type="text" value="2" id="lperim" oninput="sim.C.conf.LAMBDA_P[1]=this.value">
-	</td>
-</tr>
-<tr>
-	<td>Max<sub>Act</sub></td><td>
-		<input type="text" value="80" id="mact" oninput="sim.C.conf.MAX_ACT[1]=this.value">
-	</td>
-	<td>&lambda;<sub>Act</sub></td><td>
-		<input type="text" value="140" id="lact" oninput="sim.C.conf.LAMBDA_ACT[1]=this.value">
-	</td>
-</tr>
-<tr>
-	<td>T</td><td>
-	<input type="text" value="20" id="t" oninput="sim.C.conf.T=this.value">
-	</td>
-	<td>Framerate</td><td>
-	<input type="text" value="1" id="frames" oninput="sim.conf['IMGFRAMERATE']=this.value">
-	</td>
-</tr>
-
-</table>
-</form>
+	<form autocomplete="off">
+		<table>
+			<tr>
+				<td>Adhesion<sub>cell-matrix</sub></td><td>
+					<input type="text" value="20" id="jte" oninput="sim.C.conf.J[1][0]=sim.C.conf.J[0][1]=parseInt(this.value)">
+				</td>
+				<td>Adhesion<sub>cell-cell</sub></td><td>
+					<input type="text" value="0" id="jtt" oninput="sim.C.conf.J[1][1]=parseInt(this.value)">
+				</td>
+			</tr>
+			<tr>
+				<td>Volume</td><td>
+					<input type="text" value="500" id="volume" oninput="if(this.value>0){sim.C.conf.V[1]=this.value}">
+				</td>
+				<td>&lambda;<sub>Volume</sub></td><td>
+					<input type="text" value="50" id="lvolume" oninput="sim.C.conf.LAMBDA_V[1]=this.value">
+				</td>
+			</tr>
+			<tr>
+				<td>Perimeter</td><td>
+					<input type="text" value="340" id="perimeter" oninput="sim.C.conf.P[1]=this.value">
+				</td>
+				<td>&lambda;<sub>P</sub></td><td>
+					<input type="text" value="2" id="lperim" oninput="sim.C.conf.LAMBDA_P[1]=this.value">
+				</td>
+			</tr>
+			<tr>
+				<td>Max<sub>Act</sub></td><td>
+					<input type="text" value="80" id="mact" oninput="sim.C.conf.MAX_ACT[1]=this.value">
+				</td>
+				<td>&lambda;<sub>Act</sub></td><td>
+					<input type="text" value="140" id="lact" oninput="sim.C.conf.LAMBDA_ACT[1]=this.value">
+				</td>
+			</tr>
+			<tr>
+				<td>T</td><td>
+					<input type="text" value="20" id="t" oninput="sim.C.conf.T=this.value">
+				</td>
+				<td>Framerate</td><td>
+					<input type="text" value="1" id="frames" oninput="sim.conf['IMGFRAMERATE']=this.value">
+				</td>
+			</tr>
+			
+		</table>
+	</form>
+</div>
+<div id="timestamp" style="margin-top:15px; font-weight:bold;">
+	Simulation Time: <span id="timeValue">0</span> MCS
 </div>
 </body>
 </html>
